@@ -1,0 +1,20 @@
+body {
+  background-color: bisque;
+}
+
+h1 {
+  color: blue;
+}
+
+.active {
+  color: tomato;
+}
+
+.hidden {
+  display: none;
+}
+
+img {
+  width: 450px;
+  height: 300px;
+}
