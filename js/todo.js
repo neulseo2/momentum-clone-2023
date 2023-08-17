@@ -1,5 +1,5 @@
 const toDoForm = document.getElementById("todo-form");
-const toDoInput = toDoForm.querySelector("input");
+const toDoInput = toDoForm.querySelector("#todo-form input");
 const toDoList = document.getElementById("todo-list");
 
 const TODOS_KEY = "toDos";
@@ -7,6 +7,7 @@ const TODOS_KEY = "toDos";
 let toDos = [];
 
 function saveToDos() {
+  event.preventDefault();
   localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
 }
 
@@ -18,41 +19,36 @@ function deleteToDo(event) {
   saveToDos();
 }
 
+// function to add todo lists on HTML
 function paintToDo(newToDo) {
-
-  // make variables for the li and span
   const li = document.createElement("li");
   const span = document.createElement("span");
-  // the text of the span ---> newToDo
   span.innerText = newToDo;
+  li.appendChild(span);
+
   const btn = document.createElement("button");
   btn.innerText = "X";
-
   btn.addEventListener("click", deleteToDo)
   li.appendChild(btn);
-  li.appendChild(span);
   toDoList.appendChild(li);
-
 }
 
 function handleToDoSubmit(event) {
-  event.preventDefault()
+  event.preventDefault();
   const newToDo = toDoInput.value;
   toDoInput.value = "";
   const newToDoObj = {
     text: newToDo,
-    // to get a "random" number
-    id: Date.now()
+    id: Date.now() // to get a "random" number
   };
   toDos.push(newToDoObj);
-  paintToDo(newToDo);
+  paintToDo(newToDo); // represents the value of the input
   saveToDos();
 }
 
 toDoForm.addEventListener("submit", handleToDoSubmit);
 
 const savedToDos = localStorage.getItem(TODOS_KEY);
-
 
 if (savedToDos) {
   const parsedToDos = JSON.parse(savedToDos);
