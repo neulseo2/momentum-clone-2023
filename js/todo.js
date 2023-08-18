@@ -20,22 +20,23 @@ function saveToDos() {
 function deleteToDo(event) {
   const liSelected = event.target.parentNode;// ---> distinguishes each button
   liSelected.remove(); // removes selected list
-  toDos = toDos.filter(item => item.id !== parseInt(liSelected.id)); // keeps the toDos that are not selected
+  toDos = toDos.filter((toDo) => toDo.id !== parseInt(liSelected.id)); // keeps the toDos that are not selected
   saveToDos();
 }
 
 // function to add todo lists on HTML
-function displayToDo(newToDo) {
-  const li = document.createElement("li");
-  li.id = newToDo.id;
+function displayToDo(newToDoObj) {
+  const liCreated = document.createElement("li");
+  liCreated.id = newToDoObj["id"]; // because newToDo is ---> handleTodoSubit()'s newToDoObj{}
+  // adding an id attribute to li tag on HTML same as ---> the localStorage's obj's key("id")'s value.
   const span = document.createElement("span");
-  span.innerText = newToDo.text;
+  span.innerText = newToDoObj.text;
   const btn = document.createElement("button");
   btn.innerText = "X";
   btn.addEventListener("click", deleteToDo)
-  li.appendChild(span);
-  li.appendChild(btn);
-  toDoList.appendChild(li);
+  liCreated.appendChild(span);
+  liCreated.appendChild(btn);
+  toDoList.appendChild(liCreated);
 }
 
 function handleToDoSubmit(event) {
