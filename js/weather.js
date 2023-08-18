@@ -7,4 +7,4 @@ function onGeoError(position) {
   alert('Cannot locate your position.');
 }
 
-navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+//navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);

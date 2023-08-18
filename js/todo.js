@@ -1,34 +1,39 @@
 const toDoForm = document.getElementById("todo-form");
-const toDoInput = toDoForm.querySelector("#todo-form input");
+const toDoInput = document.querySelector("#todo-form input");
 const toDoList = document.getElementById("todo-list");
 
 const TODOS_KEY = "toDos";
 
 let toDos = [];
 
+// saving toDos in local storage
 function saveToDos() {
-  event.preventDefault();
-  localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
+  localStorage.setItem(TODOS_KEY, JSON.stringify(toDos)); // turn the toDos array into string
 }
+// handleToDoSubmit 함수에서 사용하는 함수로, 오브젝트의 밸류로 '저장'하기 위한 과정이다: * setter *
+// localStorage.setItem 을 사용, object를 만들어준다: setItem(key, value);
+// 오브젝트의 밸류는 스트링이어야하기 때문에, JSON.stringify() 를 사용, toDos array (line7) 를 스트링으로 변환한다.
+// 이렇게 만들어진 오브젝트는 handleToDoSubmit() 에서 불려지고(line49), displayToDo()를 거쳐 화면에 보여진다.
+// setter and getter 비교: savedToDos(line52) variable은, localStorage에 function saveToDos()를 거쳐 저장된(setter) 정보를 가져온다(getter).
+// setter 에서는 오브젝트에 저장을 해야하니까 array -> string 으로 바꿔주고, getter 에서는 저장된 값을 자바스크립트가 읽어야하니까, string -> array 로 바꿔준다.
 
 function deleteToDo(event) {
-  // event.target.parentNode ---> to distinguish each button
-  const parentLi = event.target.parentNode;
-  parentLi.remove();
-  toDos = toDos.filter(item => item.id !== parseInt(parentLi.id));
+  const liSelected = event.target.parentNode;// ---> distinguishes each button
+  liSelected.remove(); // removes selected list
+  toDos = toDos.filter(item => item.id !== parseInt(liSelected.id)); // keeps the toDos that are not selected
   saveToDos();
 }
 
 // function to add todo lists on HTML
-function paintToDo(newToDo) {
+function displayToDo(newToDo) {
   const li = document.createElement("li");
+  li.id = newToDo.id;
   const span = document.createElement("span");
-  span.innerText = newToDo;
-  li.appendChild(span);
-
+  span.innerText = newToDo.text;
   const btn = document.createElement("button");
   btn.innerText = "X";
   btn.addEventListener("click", deleteToDo)
+  li.appendChild(span);
   li.appendChild(btn);
   toDoList.appendChild(li);
 }
@@ -40,18 +45,20 @@ function handleToDoSubmit(event) {
   const newToDoObj = {
     text: newToDo,
     id: Date.now() // to get a "random" number
-  };
+  }; // saves the input in obj with id -- more organized
   toDos.push(newToDoObj);
-  paintToDo(newToDo); // represents the value of the input
+  displayToDo(newToDoObj); // represents the value of the input
   saveToDos();
 }
 
 toDoForm.addEventListener("submit", handleToDoSubmit);
 
-const savedToDos = localStorage.getItem(TODOS_KEY);
+const savedToDos = localStorage.getItem(TODOS_KEY); // * getter *
 
-if (savedToDos) {
-  const parsedToDos = JSON.parse(savedToDos);
+if (savedToDos) { // typeof savedToDos === string
+  const parsedToDos = JSON.parse(savedToDos); // turning the string value into an array
   toDos = parsedToDos;
-  parsedToDos.forEach(paintToDo);
+  // initially, toDos starts with an empty array. But if the array exstis already,
+  // instead of replacing the old values, restore them and add new values
+  parsedToDos.forEach(displayToDo); // each eleement in the array 를 displayToDo 로 보낸다.
 }
